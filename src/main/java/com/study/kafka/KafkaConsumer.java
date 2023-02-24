@@ -1,5 +1,6 @@
 package com.study.kafka;
 
+import com.study.constant.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -10,8 +11,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class KafkaConsumer {
 
-    @KafkaListener(topics = KafkaConstant.TOPIC_NAME,groupId = "default-group")
-    public void consume1(ConsumerRecord<String,String> record, Acknowledgment ack) {
+    @KafkaListener(topics = Constant.POI_QUERY_TOPIC,groupId = "default-group")
+    public void consume(ConsumerRecord<String,String> record, Acknowledgment ack) {
         String topic = record.topic();
         String key = record.key();
         String value = record.value();
