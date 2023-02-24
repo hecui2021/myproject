@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tencent.myselfdemo.mapper.TcProjectIotInfoMapper">
+
+    <insert id="insert" parameterType="com.tencent.myselfdemo.pojo.TcProjectIotInfo">
+        insert into tc_project_iot_info
+        (channel_id,project_id,review_status,iot_channel,channel_name,from_where,is_delete,create_time,create_by,car_name)
+        values
+        (#{channelId},#{projectId},#{reviewStatus},#{iotChannel},#{channelName},#{fromWhere},#{isDelete},#{createTime},#{createBy},#{carName})
+    </insert>
+
+
+
+</mapper>
