@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tencent.myselfdemo.mapper.TestMapper">
-    <select id="selectConfigList" resultType="com.tencent.myselfdemo.pojo.TcProjectIotInfo">
+<mapper namespace="com.study.mapper.TestMapper">
+    <select id="selectConfigList" resultType="com.study.pojo.TcProjectIotInfo">
         select
             c.product_id as channelId,p.model as carName,p.create_time as createTime,
             p.create_by as createBy,p.name as channelName,p.project_id as projectId,p.is_delete as isDelete,
