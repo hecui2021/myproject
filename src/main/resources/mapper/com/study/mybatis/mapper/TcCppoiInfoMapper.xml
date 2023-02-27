@@ -1,0 +1,849 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mybatis.mapper.TcCppoiInfoMapper">
+  <resultMap id="BaseResultMap" type="com.study.mybatis.pojo.TcCppoiInfo">
+    <id column="cppoi_id" jdbcType="INTEGER" property="cppoiId" />
+    <result column="poi_id" jdbcType="VARCHAR" property="poiId" />
+    <result column="cppoi_apply_record_id" jdbcType="VARCHAR" property="cppoiApplyRecordId" />
+    <result column="cppoi_apply_record_name" jdbcType="VARCHAR" property="cppoiApplyRecordName" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="csys" jdbcType="VARCHAR" property="csys" />
+    <result column="longitude" jdbcType="DOUBLE" property="longitude" />
+    <result column="latitude" jdbcType="DOUBLE" property="latitude" />
+    <result column="tel" jdbcType="VARCHAR" property="tel" />
+    <result column="contact_tel" jdbcType="VARCHAR" property="contactTel" />
+    <result column="open_time" jdbcType="VARCHAR" property="openTime" />
+    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="busi_id" jdbcType="VARCHAR" property="busiId" />
+    <result column="prog_id" jdbcType="VARCHAR" property="progId" />
+    <result column="prog_name" jdbcType="VARCHAR" property="progName" />
+    <result column="tpoi_id" jdbcType="VARCHAR" property="tpoiId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="deliver_status" jdbcType="TINYINT" property="deliverStatus" />
+    <result column="deliver_times" jdbcType="TINYINT" property="deliverTimes" />
+    <result column="reduplicate" jdbcType="TINYINT" property="reduplicate" />
+    <result column="mount_time" jdbcType="TIMESTAMP" property="mountTime" />
+    <result column="priority" jdbcType="TINYINT" property="priority" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="last_mod_time" jdbcType="TIMESTAMP" property="lastModTime" />
+    <result column="category_view_name" jdbcType="VARCHAR" property="categoryViewName" />
+    <result column="program_app_id" jdbcType="VARCHAR" property="programAppId" />
+    <result column="poi_status" jdbcType="VARCHAR" property="poiStatus" />
+    <result column="poi_info_name" jdbcType="VARCHAR" property="poiInfoName" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.study.mybatis.pojo.TcCppoiInfoWithBLOBs">
+    <result column="desc" jdbcType="LONGVARCHAR" property="desc" />
+    <result column="shop_photos" jdbcType="LONGVARCHAR" property="shopPhotos" />
+    <result column="license_photos" jdbcType="LONGVARCHAR" property="licensePhotos" />
+    <result column="ext_info" jdbcType="LONGVARCHAR" property="extInfo" />
+    <result column="mount_info" jdbcType="LONGVARCHAR" property="mountInfo" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    cppoi_id, poi_id, cppoi_apply_record_id, cppoi_apply_record_name, title, address, 
+    csys, longitude, latitude, tel, contact_tel, open_time, category, busi_id, prog_id, 
+    prog_name, tpoi_id, status, deliver_status, deliver_times, reduplicate, mount_time, 
+    priority, is_delete, create_by, create_time, update_by, update_time, last_mod_time, 
+    category_view_name, program_app_id, poi_status, poi_info_name, end_time
+  </sql>
+  <sql id="Blob_Column_List">
+    desc, shop_photos, license_photos, ext_info, mount_info
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.study.mybatis.pojo.TcCppoiInfoExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tc_cppoi_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.study.mybatis.pojo.TcCppoiInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tc_cppoi_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tc_cppoi_info
+    where cppoi_id = #{cppoiId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tc_cppoi_info
+    where cppoi_id = #{cppoiId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.study.mybatis.pojo.TcCppoiInfoExample">
+    delete from tc_cppoi_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.study.mybatis.pojo.TcCppoiInfoWithBLOBs">
+    insert into tc_cppoi_info (cppoi_id, poi_id, cppoi_apply_record_id, 
+      cppoi_apply_record_name, title, address, 
+      csys, longitude, latitude, 
+      tel, contact_tel, open_time, 
+      category, busi_id, prog_id, 
+      prog_name, tpoi_id, status, 
+      deliver_status, deliver_times, reduplicate, 
+      mount_time, priority, is_delete, 
+      create_by, create_time, update_by, 
+      update_time, last_mod_time, category_view_name, 
+      program_app_id, poi_status, poi_info_name, 
+      end_time, desc, shop_photos, 
+      license_photos, ext_info, mount_info
+      )
+    values (#{cppoiId,jdbcType=INTEGER}, #{poiId,jdbcType=VARCHAR}, #{cppoiApplyRecordId,jdbcType=VARCHAR}, 
+      #{cppoiApplyRecordName,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{csys,jdbcType=VARCHAR}, #{longitude,jdbcType=DOUBLE}, #{latitude,jdbcType=DOUBLE}, 
+      #{tel,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, #{openTime,jdbcType=VARCHAR}, 
+      #{category,jdbcType=VARCHAR}, #{busiId,jdbcType=VARCHAR}, #{progId,jdbcType=VARCHAR}, 
+      #{progName,jdbcType=VARCHAR}, #{tpoiId,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{deliverStatus,jdbcType=TINYINT}, #{deliverTimes,jdbcType=TINYINT}, #{reduplicate,jdbcType=TINYINT}, 
+      #{mountTime,jdbcType=TIMESTAMP}, #{priority,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{lastModTime,jdbcType=TIMESTAMP}, #{categoryViewName,jdbcType=VARCHAR}, 
+      #{programAppId,jdbcType=VARCHAR}, #{poiStatus,jdbcType=VARCHAR}, #{poiInfoName,jdbcType=VARCHAR}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{desc,jdbcType=LONGVARCHAR}, #{shopPhotos,jdbcType=LONGVARCHAR}, 
+      #{licensePhotos,jdbcType=LONGVARCHAR}, #{extInfo,jdbcType=LONGVARCHAR}, #{mountInfo,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.study.mybatis.pojo.TcCppoiInfoWithBLOBs">
+    insert into tc_cppoi_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cppoiId != null">
+        cppoi_id,
+      </if>
+      <if test="poiId != null">
+        poi_id,
+      </if>
+      <if test="cppoiApplyRecordId != null">
+        cppoi_apply_record_id,
+      </if>
+      <if test="cppoiApplyRecordName != null">
+        cppoi_apply_record_name,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="csys != null">
+        csys,
+      </if>
+      <if test="longitude != null">
+        longitude,
+      </if>
+      <if test="latitude != null">
+        latitude,
+      </if>
+      <if test="tel != null">
+        tel,
+      </if>
+      <if test="contactTel != null">
+        contact_tel,
+      </if>
+      <if test="openTime != null">
+        open_time,
+      </if>
+      <if test="category != null">
+        category,
+      </if>
+      <if test="busiId != null">
+        busi_id,
+      </if>
+      <if test="progId != null">
+        prog_id,
+      </if>
+      <if test="progName != null">
+        prog_name,
+      </if>
+      <if test="tpoiId != null">
+        tpoi_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="deliverStatus != null">
+        deliver_status,
+      </if>
+      <if test="deliverTimes != null">
+        deliver_times,
+      </if>
+      <if test="reduplicate != null">
+        reduplicate,
+      </if>
+      <if test="mountTime != null">
+        mount_time,
+      </if>
+      <if test="priority != null">
+        priority,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="lastModTime != null">
+        last_mod_time,
+      </if>
+      <if test="categoryViewName != null">
+        category_view_name,
+      </if>
+      <if test="programAppId != null">
+        program_app_id,
+      </if>
+      <if test="poiStatus != null">
+        poi_status,
+      </if>
+      <if test="poiInfoName != null">
+        poi_info_name,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="desc != null">
+        desc,
+      </if>
+      <if test="shopPhotos != null">
+        shop_photos,
+      </if>
+      <if test="licensePhotos != null">
+        license_photos,
+      </if>
+      <if test="extInfo != null">
+        ext_info,
+      </if>
+      <if test="mountInfo != null">
+        mount_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cppoiId != null">
+        #{cppoiId,jdbcType=INTEGER},
+      </if>
+      <if test="poiId != null">
+        #{poiId,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyRecordId != null">
+        #{cppoiApplyRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyRecordName != null">
+        #{cppoiApplyRecordName,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="csys != null">
+        #{csys,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null">
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="tel != null">
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="contactTel != null">
+        #{contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null">
+        #{openTime,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null">
+        #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="busiId != null">
+        #{busiId,jdbcType=VARCHAR},
+      </if>
+      <if test="progId != null">
+        #{progId,jdbcType=VARCHAR},
+      </if>
+      <if test="progName != null">
+        #{progName,jdbcType=VARCHAR},
+      </if>
+      <if test="tpoiId != null">
+        #{tpoiId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="deliverStatus != null">
+        #{deliverStatus,jdbcType=TINYINT},
+      </if>
+      <if test="deliverTimes != null">
+        #{deliverTimes,jdbcType=TINYINT},
+      </if>
+      <if test="reduplicate != null">
+        #{reduplicate,jdbcType=TINYINT},
+      </if>
+      <if test="mountTime != null">
+        #{mountTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="priority != null">
+        #{priority,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModTime != null">
+        #{lastModTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="categoryViewName != null">
+        #{categoryViewName,jdbcType=VARCHAR},
+      </if>
+      <if test="programAppId != null">
+        #{programAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="poiStatus != null">
+        #{poiStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="poiInfoName != null">
+        #{poiInfoName,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="shopPhotos != null">
+        #{shopPhotos,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="licensePhotos != null">
+        #{licensePhotos,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extInfo != null">
+        #{extInfo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="mountInfo != null">
+        #{mountInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.study.mybatis.pojo.TcCppoiInfoExample" resultType="java.lang.Long">
+    select count(*) from tc_cppoi_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tc_cppoi_info
+    <set>
+      <if test="record.cppoiId != null">
+        cppoi_id = #{record.cppoiId,jdbcType=INTEGER},
+      </if>
+      <if test="record.poiId != null">
+        poi_id = #{record.poiId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cppoiApplyRecordId != null">
+        cppoi_apply_record_id = #{record.cppoiApplyRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cppoiApplyRecordName != null">
+        cppoi_apply_record_name = #{record.cppoiApplyRecordName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null">
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.csys != null">
+        csys = #{record.csys,jdbcType=VARCHAR},
+      </if>
+      <if test="record.longitude != null">
+        longitude = #{record.longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="record.latitude != null">
+        latitude = #{record.latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="record.tel != null">
+        tel = #{record.tel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contactTel != null">
+        contact_tel = #{record.contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.openTime != null">
+        open_time = #{record.openTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.category != null">
+        category = #{record.category,jdbcType=VARCHAR},
+      </if>
+      <if test="record.busiId != null">
+        busi_id = #{record.busiId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.progId != null">
+        prog_id = #{record.progId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.progName != null">
+        prog_name = #{record.progName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tpoiId != null">
+        tpoi_id = #{record.tpoiId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.deliverStatus != null">
+        deliver_status = #{record.deliverStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.deliverTimes != null">
+        deliver_times = #{record.deliverTimes,jdbcType=TINYINT},
+      </if>
+      <if test="record.reduplicate != null">
+        reduplicate = #{record.reduplicate,jdbcType=TINYINT},
+      </if>
+      <if test="record.mountTime != null">
+        mount_time = #{record.mountTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.priority != null">
+        priority = #{record.priority,jdbcType=TINYINT},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="record.createBy != null">
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null">
+        update_by = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastModTime != null">
+        last_mod_time = #{record.lastModTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.categoryViewName != null">
+        category_view_name = #{record.categoryViewName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.programAppId != null">
+        program_app_id = #{record.programAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.poiStatus != null">
+        poi_status = #{record.poiStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.poiInfoName != null">
+        poi_info_name = #{record.poiInfoName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.endTime != null">
+        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.desc != null">
+        desc = #{record.desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.shopPhotos != null">
+        shop_photos = #{record.shopPhotos,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.licensePhotos != null">
+        license_photos = #{record.licensePhotos,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.extInfo != null">
+        ext_info = #{record.extInfo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.mountInfo != null">
+        mount_info = #{record.mountInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update tc_cppoi_info
+    set cppoi_id = #{record.cppoiId,jdbcType=INTEGER},
+      poi_id = #{record.poiId,jdbcType=VARCHAR},
+      cppoi_apply_record_id = #{record.cppoiApplyRecordId,jdbcType=VARCHAR},
+      cppoi_apply_record_name = #{record.cppoiApplyRecordName,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      csys = #{record.csys,jdbcType=VARCHAR},
+      longitude = #{record.longitude,jdbcType=DOUBLE},
+      latitude = #{record.latitude,jdbcType=DOUBLE},
+      tel = #{record.tel,jdbcType=VARCHAR},
+      contact_tel = #{record.contactTel,jdbcType=VARCHAR},
+      open_time = #{record.openTime,jdbcType=VARCHAR},
+      category = #{record.category,jdbcType=VARCHAR},
+      busi_id = #{record.busiId,jdbcType=VARCHAR},
+      prog_id = #{record.progId,jdbcType=VARCHAR},
+      prog_name = #{record.progName,jdbcType=VARCHAR},
+      tpoi_id = #{record.tpoiId,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      deliver_status = #{record.deliverStatus,jdbcType=TINYINT},
+      deliver_times = #{record.deliverTimes,jdbcType=TINYINT},
+      reduplicate = #{record.reduplicate,jdbcType=TINYINT},
+      mount_time = #{record.mountTime,jdbcType=TIMESTAMP},
+      priority = #{record.priority,jdbcType=TINYINT},
+      is_delete = #{record.isDelete,jdbcType=TINYINT},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      last_mod_time = #{record.lastModTime,jdbcType=TIMESTAMP},
+      category_view_name = #{record.categoryViewName,jdbcType=VARCHAR},
+      program_app_id = #{record.programAppId,jdbcType=VARCHAR},
+      poi_status = #{record.poiStatus,jdbcType=VARCHAR},
+      poi_info_name = #{record.poiInfoName,jdbcType=VARCHAR},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      desc = #{record.desc,jdbcType=LONGVARCHAR},
+      shop_photos = #{record.shopPhotos,jdbcType=LONGVARCHAR},
+      license_photos = #{record.licensePhotos,jdbcType=LONGVARCHAR},
+      ext_info = #{record.extInfo,jdbcType=LONGVARCHAR},
+      mount_info = #{record.mountInfo,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tc_cppoi_info
+    set cppoi_id = #{record.cppoiId,jdbcType=INTEGER},
+      poi_id = #{record.poiId,jdbcType=VARCHAR},
+      cppoi_apply_record_id = #{record.cppoiApplyRecordId,jdbcType=VARCHAR},
+      cppoi_apply_record_name = #{record.cppoiApplyRecordName,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      csys = #{record.csys,jdbcType=VARCHAR},
+      longitude = #{record.longitude,jdbcType=DOUBLE},
+      latitude = #{record.latitude,jdbcType=DOUBLE},
+      tel = #{record.tel,jdbcType=VARCHAR},
+      contact_tel = #{record.contactTel,jdbcType=VARCHAR},
+      open_time = #{record.openTime,jdbcType=VARCHAR},
+      category = #{record.category,jdbcType=VARCHAR},
+      busi_id = #{record.busiId,jdbcType=VARCHAR},
+      prog_id = #{record.progId,jdbcType=VARCHAR},
+      prog_name = #{record.progName,jdbcType=VARCHAR},
+      tpoi_id = #{record.tpoiId,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      deliver_status = #{record.deliverStatus,jdbcType=TINYINT},
+      deliver_times = #{record.deliverTimes,jdbcType=TINYINT},
+      reduplicate = #{record.reduplicate,jdbcType=TINYINT},
+      mount_time = #{record.mountTime,jdbcType=TIMESTAMP},
+      priority = #{record.priority,jdbcType=TINYINT},
+      is_delete = #{record.isDelete,jdbcType=TINYINT},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      last_mod_time = #{record.lastModTime,jdbcType=TIMESTAMP},
+      category_view_name = #{record.categoryViewName,jdbcType=VARCHAR},
+      program_app_id = #{record.programAppId,jdbcType=VARCHAR},
+      poi_status = #{record.poiStatus,jdbcType=VARCHAR},
+      poi_info_name = #{record.poiInfoName,jdbcType=VARCHAR},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.study.mybatis.pojo.TcCppoiInfoWithBLOBs">
+    update tc_cppoi_info
+    <set>
+      <if test="poiId != null">
+        poi_id = #{poiId,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyRecordId != null">
+        cppoi_apply_record_id = #{cppoiApplyRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyRecordName != null">
+        cppoi_apply_record_name = #{cppoiApplyRecordName,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="csys != null">
+        csys = #{csys,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null">
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null">
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="tel != null">
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="contactTel != null">
+        contact_tel = #{contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null">
+        open_time = #{openTime,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null">
+        category = #{category,jdbcType=VARCHAR},
+      </if>
+      <if test="busiId != null">
+        busi_id = #{busiId,jdbcType=VARCHAR},
+      </if>
+      <if test="progId != null">
+        prog_id = #{progId,jdbcType=VARCHAR},
+      </if>
+      <if test="progName != null">
+        prog_name = #{progName,jdbcType=VARCHAR},
+      </if>
+      <if test="tpoiId != null">
+        tpoi_id = #{tpoiId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="deliverStatus != null">
+        deliver_status = #{deliverStatus,jdbcType=TINYINT},
+      </if>
+      <if test="deliverTimes != null">
+        deliver_times = #{deliverTimes,jdbcType=TINYINT},
+      </if>
+      <if test="reduplicate != null">
+        reduplicate = #{reduplicate,jdbcType=TINYINT},
+      </if>
+      <if test="mountTime != null">
+        mount_time = #{mountTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="priority != null">
+        priority = #{priority,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastModTime != null">
+        last_mod_time = #{lastModTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="categoryViewName != null">
+        category_view_name = #{categoryViewName,jdbcType=VARCHAR},
+      </if>
+      <if test="programAppId != null">
+        program_app_id = #{programAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="poiStatus != null">
+        poi_status = #{poiStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="poiInfoName != null">
+        poi_info_name = #{poiInfoName,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="desc != null">
+        desc = #{desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="shopPhotos != null">
+        shop_photos = #{shopPhotos,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="licensePhotos != null">
+        license_photos = #{licensePhotos,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extInfo != null">
+        ext_info = #{extInfo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="mountInfo != null">
+        mount_info = #{mountInfo,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where cppoi_id = #{cppoiId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.study.mybatis.pojo.TcCppoiInfoWithBLOBs">
+    update tc_cppoi_info
+    set poi_id = #{poiId,jdbcType=VARCHAR},
+      cppoi_apply_record_id = #{cppoiApplyRecordId,jdbcType=VARCHAR},
+      cppoi_apply_record_name = #{cppoiApplyRecordName,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      csys = #{csys,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      tel = #{tel,jdbcType=VARCHAR},
+      contact_tel = #{contactTel,jdbcType=VARCHAR},
+      open_time = #{openTime,jdbcType=VARCHAR},
+      category = #{category,jdbcType=VARCHAR},
+      busi_id = #{busiId,jdbcType=VARCHAR},
+      prog_id = #{progId,jdbcType=VARCHAR},
+      prog_name = #{progName,jdbcType=VARCHAR},
+      tpoi_id = #{tpoiId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      deliver_status = #{deliverStatus,jdbcType=TINYINT},
+      deliver_times = #{deliverTimes,jdbcType=TINYINT},
+      reduplicate = #{reduplicate,jdbcType=TINYINT},
+      mount_time = #{mountTime,jdbcType=TIMESTAMP},
+      priority = #{priority,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      last_mod_time = #{lastModTime,jdbcType=TIMESTAMP},
+      category_view_name = #{categoryViewName,jdbcType=VARCHAR},
+      program_app_id = #{programAppId,jdbcType=VARCHAR},
+      poi_status = #{poiStatus,jdbcType=VARCHAR},
+      poi_info_name = #{poiInfoName,jdbcType=VARCHAR},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      desc = #{desc,jdbcType=LONGVARCHAR},
+      shop_photos = #{shopPhotos,jdbcType=LONGVARCHAR},
+      license_photos = #{licensePhotos,jdbcType=LONGVARCHAR},
+      ext_info = #{extInfo,jdbcType=LONGVARCHAR},
+      mount_info = #{mountInfo,jdbcType=LONGVARCHAR}
+    where cppoi_id = #{cppoiId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.study.mybatis.pojo.TcCppoiInfo">
+    update tc_cppoi_info
+    set poi_id = #{poiId,jdbcType=VARCHAR},
+      cppoi_apply_record_id = #{cppoiApplyRecordId,jdbcType=VARCHAR},
+      cppoi_apply_record_name = #{cppoiApplyRecordName,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      csys = #{csys,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      tel = #{tel,jdbcType=VARCHAR},
+      contact_tel = #{contactTel,jdbcType=VARCHAR},
+      open_time = #{openTime,jdbcType=VARCHAR},
+      category = #{category,jdbcType=VARCHAR},
+      busi_id = #{busiId,jdbcType=VARCHAR},
+      prog_id = #{progId,jdbcType=VARCHAR},
+      prog_name = #{progName,jdbcType=VARCHAR},
+      tpoi_id = #{tpoiId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      deliver_status = #{deliverStatus,jdbcType=TINYINT},
+      deliver_times = #{deliverTimes,jdbcType=TINYINT},
+      reduplicate = #{reduplicate,jdbcType=TINYINT},
+      mount_time = #{mountTime,jdbcType=TIMESTAMP},
+      priority = #{priority,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      last_mod_time = #{lastModTime,jdbcType=TIMESTAMP},
+      category_view_name = #{categoryViewName,jdbcType=VARCHAR},
+      program_app_id = #{programAppId,jdbcType=VARCHAR},
+      poi_status = #{poiStatus,jdbcType=VARCHAR},
+      poi_info_name = #{poiInfoName,jdbcType=VARCHAR},
+      end_time = #{endTime,jdbcType=TIMESTAMP}
+    where cppoi_id = #{cppoiId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mybatis.mapper.TcCppoiApplyRecordMapper">
+  <resultMap id="BaseResultMap" type="com.study.mybatis.pojo.TcCppoiApplyRecord">
+    <id column="record_id" jdbcType="INTEGER" property="recordId" />
+    <result column="cppoi_apply_record_id" jdbcType="VARCHAR" property="cppoiApplyRecordId" />
+    <result column="cppoi_apply_record_name" jdbcType="VARCHAR" property="cppoiApplyRecordName" />
+    <result column="cppoi_apply_record_describe" jdbcType="VARCHAR" property="cppoiApplyRecordDescribe" />
+    <result column="cppoi_apply_review_status" jdbcType="TINYINT" property="cppoiApplyReviewStatus" />
+    <result column="prog_id" jdbcType="VARCHAR" property="progId" />
+    <result column="prog_name" jdbcType="VARCHAR" property="progName" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    record_id, cppoi_apply_record_id, cppoi_apply_record_name, cppoi_apply_record_describe, 
+    cppoi_apply_review_status, prog_id, prog_name, is_delete, create_by, create_time, 
+    update_by, update_time, status
+  </sql>
+  <select id="selectByExample" parameterType="com.study.mybatis.pojo.TcCppoiApplyRecordExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tc_cppoi_apply_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tc_cppoi_apply_record
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tc_cppoi_apply_record
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.study.mybatis.pojo.TcCppoiApplyRecordExample">
+    delete from tc_cppoi_apply_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.study.mybatis.pojo.TcCppoiApplyRecord">
+    insert into tc_cppoi_apply_record (record_id, cppoi_apply_record_id, cppoi_apply_record_name, 
+      cppoi_apply_record_describe, cppoi_apply_review_status, 
+      prog_id, prog_name, is_delete, 
+      create_by, create_time, update_by, 
+      update_time, status)
+    values (#{recordId,jdbcType=INTEGER}, #{cppoiApplyRecordId,jdbcType=VARCHAR}, #{cppoiApplyRecordName,jdbcType=VARCHAR}, 
+      #{cppoiApplyRecordDescribe,jdbcType=VARCHAR}, #{cppoiApplyReviewStatus,jdbcType=TINYINT}, 
+      #{progId,jdbcType=VARCHAR}, #{progName,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.study.mybatis.pojo.TcCppoiApplyRecord">
+    insert into tc_cppoi_apply_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="recordId != null">
+        record_id,
+      </if>
+      <if test="cppoiApplyRecordId != null">
+        cppoi_apply_record_id,
+      </if>
+      <if test="cppoiApplyRecordName != null">
+        cppoi_apply_record_name,
+      </if>
+      <if test="cppoiApplyRecordDescribe != null">
+        cppoi_apply_record_describe,
+      </if>
+      <if test="cppoiApplyReviewStatus != null">
+        cppoi_apply_review_status,
+      </if>
+      <if test="progId != null">
+        prog_id,
+      </if>
+      <if test="progName != null">
+        prog_name,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="recordId != null">
+        #{recordId,jdbcType=INTEGER},
+      </if>
+      <if test="cppoiApplyRecordId != null">
+        #{cppoiApplyRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyRecordName != null">
+        #{cppoiApplyRecordName,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyRecordDescribe != null">
+        #{cppoiApplyRecordDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyReviewStatus != null">
+        #{cppoiApplyReviewStatus,jdbcType=TINYINT},
+      </if>
+      <if test="progId != null">
+        #{progId,jdbcType=VARCHAR},
+      </if>
+      <if test="progName != null">
+        #{progName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.study.mybatis.pojo.TcCppoiApplyRecordExample" resultType="java.lang.Long">
+    select count(*) from tc_cppoi_apply_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tc_cppoi_apply_record
+    <set>
+      <if test="record.recordId != null">
+        record_id = #{record.recordId,jdbcType=INTEGER},
+      </if>
+      <if test="record.cppoiApplyRecordId != null">
+        cppoi_apply_record_id = #{record.cppoiApplyRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cppoiApplyRecordName != null">
+        cppoi_apply_record_name = #{record.cppoiApplyRecordName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cppoiApplyRecordDescribe != null">
+        cppoi_apply_record_describe = #{record.cppoiApplyRecordDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cppoiApplyReviewStatus != null">
+        cppoi_apply_review_status = #{record.cppoiApplyReviewStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.progId != null">
+        prog_id = #{record.progId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.progName != null">
+        prog_name = #{record.progName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="record.createBy != null">
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null">
+        update_by = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tc_cppoi_apply_record
+    set record_id = #{record.recordId,jdbcType=INTEGER},
+      cppoi_apply_record_id = #{record.cppoiApplyRecordId,jdbcType=VARCHAR},
+      cppoi_apply_record_name = #{record.cppoiApplyRecordName,jdbcType=VARCHAR},
+      cppoi_apply_record_describe = #{record.cppoiApplyRecordDescribe,jdbcType=VARCHAR},
+      cppoi_apply_review_status = #{record.cppoiApplyReviewStatus,jdbcType=TINYINT},
+      prog_id = #{record.progId,jdbcType=VARCHAR},
+      prog_name = #{record.progName,jdbcType=VARCHAR},
+      is_delete = #{record.isDelete,jdbcType=TINYINT},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=TINYINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.study.mybatis.pojo.TcCppoiApplyRecord">
+    update tc_cppoi_apply_record
+    <set>
+      <if test="cppoiApplyRecordId != null">
+        cppoi_apply_record_id = #{cppoiApplyRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyRecordName != null">
+        cppoi_apply_record_name = #{cppoiApplyRecordName,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyRecordDescribe != null">
+        cppoi_apply_record_describe = #{cppoiApplyRecordDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="cppoiApplyReviewStatus != null">
+        cppoi_apply_review_status = #{cppoiApplyReviewStatus,jdbcType=TINYINT},
+      </if>
+      <if test="progId != null">
+        prog_id = #{progId,jdbcType=VARCHAR},
+      </if>
+      <if test="progName != null">
+        prog_name = #{progName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+    </set>
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.study.mybatis.pojo.TcCppoiApplyRecord">
+    update tc_cppoi_apply_record
+    set cppoi_apply_record_id = #{cppoiApplyRecordId,jdbcType=VARCHAR},
+      cppoi_apply_record_name = #{cppoiApplyRecordName,jdbcType=VARCHAR},
+      cppoi_apply_record_describe = #{cppoiApplyRecordDescribe,jdbcType=VARCHAR},
+      cppoi_apply_review_status = #{cppoiApplyReviewStatus,jdbcType=TINYINT},
+      prog_id = #{progId,jdbcType=VARCHAR},
+      prog_name = #{progName,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT}
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </update>
+</mapper>

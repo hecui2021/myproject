@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mybatis.mapper.TcReviewInfoMapper">
+  <resultMap id="BaseResultMap" type="com.study.mybatis.pojo.TcReviewInfo">
+    <id column="review_id" jdbcType="VARCHAR" property="reviewId" />
+    <id column="program_app_id" jdbcType="VARCHAR" property="programAppId" />
+    <result column="review_status" jdbcType="TINYINT" property="reviewStatus" />
+    <result column="review_type" jdbcType="TINYINT" property="reviewType" />
+    <result column="program_name" jdbcType="VARCHAR" property="programName" />
+    <result column="program_id" jdbcType="VARCHAR" property="programId" />
+    <result column="info_review_state" jdbcType="TINYINT" property="infoReviewState" />
+    <result column="performance_review_state" jdbcType="TINYINT" property="performanceReviewState" />
+    <result column="function_review_state" jdbcType="TINYINT" property="functionReviewState" />
+    <result column="off_review_state" jdbcType="TINYINT" property="offReviewState" />
+    <result column="program_version" jdbcType="VARCHAR" property="programVersion" />
+    <result column="program_version_id" jdbcType="VARCHAR" property="programVersionId" />
+    <result column="review_time" jdbcType="VARCHAR" property="reviewTime" />
+    <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.study.mybatis.pojo.TcReviewInfoWithBLOBs">
+    <result column="info_review_desc" jdbcType="LONGVARCHAR" property="infoReviewDesc" />
+    <result column="performance_review_desc" jdbcType="LONGVARCHAR" property="performanceReviewDesc" />
+    <result column="function_review_desc" jdbcType="LONGVARCHAR" property="functionReviewDesc" />
+    <result column="off_review_desc" jdbcType="LONGVARCHAR" property="offReviewDesc" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    review_id, program_app_id, review_status, review_type, program_name, program_id, 
+    info_review_state, performance_review_state, function_review_state, off_review_state, 
+    program_version, program_version_id, review_time, is_delete, create_by, create_time, 
+    update_by, update_time
+  </sql>
+  <sql id="Blob_Column_List">
+    info_review_desc, performance_review_desc, function_review_desc, off_review_desc
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.study.mybatis.pojo.TcReviewInfoExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tc_review_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.study.mybatis.pojo.TcReviewInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tc_review_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="com.study.mybatis.pojo.TcReviewInfoKey" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from tc_review_info
+    where review_id = #{reviewId,jdbcType=VARCHAR}
+      and program_app_id = #{programAppId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.study.mybatis.pojo.TcReviewInfoKey">
+    delete from tc_review_info
+    where review_id = #{reviewId,jdbcType=VARCHAR}
+      and program_app_id = #{programAppId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.study.mybatis.pojo.TcReviewInfoExample">
+    delete from tc_review_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.study.mybatis.pojo.TcReviewInfoWithBLOBs">
+    insert into tc_review_info (review_id, program_app_id, review_status, 
+      review_type, program_name, program_id, 
+      info_review_state, performance_review_state, 
+      function_review_state, off_review_state, program_version, 
+      program_version_id, review_time, is_delete, 
+      create_by, create_time, update_by, 
+      update_time, info_review_desc, performance_review_desc, 
+      function_review_desc, off_review_desc
+      )
+    values (#{reviewId,jdbcType=VARCHAR}, #{programAppId,jdbcType=VARCHAR}, #{reviewStatus,jdbcType=TINYINT}, 
+      #{reviewType,jdbcType=TINYINT}, #{programName,jdbcType=VARCHAR}, #{programId,jdbcType=VARCHAR}, 
+      #{infoReviewState,jdbcType=TINYINT}, #{performanceReviewState,jdbcType=TINYINT}, 
+      #{functionReviewState,jdbcType=TINYINT}, #{offReviewState,jdbcType=TINYINT}, #{programVersion,jdbcType=VARCHAR}, 
+      #{programVersionId,jdbcType=VARCHAR}, #{reviewTime,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, 
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{infoReviewDesc,jdbcType=LONGVARCHAR}, #{performanceReviewDesc,jdbcType=LONGVARCHAR}, 
+      #{functionReviewDesc,jdbcType=LONGVARCHAR}, #{offReviewDesc,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.study.mybatis.pojo.TcReviewInfoWithBLOBs">
+    insert into tc_review_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="reviewId != null">
+        review_id,
+      </if>
+      <if test="programAppId != null">
+        program_app_id,
+      </if>
+      <if test="reviewStatus != null">
+        review_status,
+      </if>
+      <if test="reviewType != null">
+        review_type,
+      </if>
+      <if test="programName != null">
+        program_name,
+      </if>
+      <if test="programId != null">
+        program_id,
+      </if>
+      <if test="infoReviewState != null">
+        info_review_state,
+      </if>
+      <if test="performanceReviewState != null">
+        performance_review_state,
+      </if>
+      <if test="functionReviewState != null">
+        function_review_state,
+      </if>
+      <if test="offReviewState != null">
+        off_review_state,
+      </if>
+      <if test="programVersion != null">
+        program_version,
+      </if>
+      <if test="programVersionId != null">
+        program_version_id,
+      </if>
+      <if test="reviewTime != null">
+        review_time,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="infoReviewDesc != null">
+        info_review_desc,
+      </if>
+      <if test="performanceReviewDesc != null">
+        performance_review_desc,
+      </if>
+      <if test="functionReviewDesc != null">
+        function_review_desc,
+      </if>
+      <if test="offReviewDesc != null">
+        off_review_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="reviewId != null">
+        #{reviewId,jdbcType=VARCHAR},
+      </if>
+      <if test="programAppId != null">
+        #{programAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewStatus != null">
+        #{reviewStatus,jdbcType=TINYINT},
+      </if>
+      <if test="reviewType != null">
+        #{reviewType,jdbcType=TINYINT},
+      </if>
+      <if test="programName != null">
+        #{programName,jdbcType=VARCHAR},
+      </if>
+      <if test="programId != null">
+        #{programId,jdbcType=VARCHAR},
+      </if>
+      <if test="infoReviewState != null">
+        #{infoReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="performanceReviewState != null">
+        #{performanceReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="functionReviewState != null">
+        #{functionReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="offReviewState != null">
+        #{offReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="programVersion != null">
+        #{programVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="programVersionId != null">
+        #{programVersionId,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewTime != null">
+        #{reviewTime,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="infoReviewDesc != null">
+        #{infoReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="performanceReviewDesc != null">
+        #{performanceReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="functionReviewDesc != null">
+        #{functionReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="offReviewDesc != null">
+        #{offReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.study.mybatis.pojo.TcReviewInfoExample" resultType="java.lang.Long">
+    select count(*) from tc_review_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tc_review_info
+    <set>
+      <if test="record.reviewId != null">
+        review_id = #{record.reviewId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.programAppId != null">
+        program_app_id = #{record.programAppId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reviewStatus != null">
+        review_status = #{record.reviewStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.reviewType != null">
+        review_type = #{record.reviewType,jdbcType=TINYINT},
+      </if>
+      <if test="record.programName != null">
+        program_name = #{record.programName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.programId != null">
+        program_id = #{record.programId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.infoReviewState != null">
+        info_review_state = #{record.infoReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="record.performanceReviewState != null">
+        performance_review_state = #{record.performanceReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="record.functionReviewState != null">
+        function_review_state = #{record.functionReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="record.offReviewState != null">
+        off_review_state = #{record.offReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="record.programVersion != null">
+        program_version = #{record.programVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.programVersionId != null">
+        program_version_id = #{record.programVersionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reviewTime != null">
+        review_time = #{record.reviewTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="record.createBy != null">
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null">
+        update_by = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.infoReviewDesc != null">
+        info_review_desc = #{record.infoReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.performanceReviewDesc != null">
+        performance_review_desc = #{record.performanceReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.functionReviewDesc != null">
+        function_review_desc = #{record.functionReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.offReviewDesc != null">
+        off_review_desc = #{record.offReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update tc_review_info
+    set review_id = #{record.reviewId,jdbcType=VARCHAR},
+      program_app_id = #{record.programAppId,jdbcType=VARCHAR},
+      review_status = #{record.reviewStatus,jdbcType=TINYINT},
+      review_type = #{record.reviewType,jdbcType=TINYINT},
+      program_name = #{record.programName,jdbcType=VARCHAR},
+      program_id = #{record.programId,jdbcType=VARCHAR},
+      info_review_state = #{record.infoReviewState,jdbcType=TINYINT},
+      performance_review_state = #{record.performanceReviewState,jdbcType=TINYINT},
+      function_review_state = #{record.functionReviewState,jdbcType=TINYINT},
+      off_review_state = #{record.offReviewState,jdbcType=TINYINT},
+      program_version = #{record.programVersion,jdbcType=VARCHAR},
+      program_version_id = #{record.programVersionId,jdbcType=VARCHAR},
+      review_time = #{record.reviewTime,jdbcType=VARCHAR},
+      is_delete = #{record.isDelete,jdbcType=TINYINT},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      info_review_desc = #{record.infoReviewDesc,jdbcType=LONGVARCHAR},
+      performance_review_desc = #{record.performanceReviewDesc,jdbcType=LONGVARCHAR},
+      function_review_desc = #{record.functionReviewDesc,jdbcType=LONGVARCHAR},
+      off_review_desc = #{record.offReviewDesc,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tc_review_info
+    set review_id = #{record.reviewId,jdbcType=VARCHAR},
+      program_app_id = #{record.programAppId,jdbcType=VARCHAR},
+      review_status = #{record.reviewStatus,jdbcType=TINYINT},
+      review_type = #{record.reviewType,jdbcType=TINYINT},
+      program_name = #{record.programName,jdbcType=VARCHAR},
+      program_id = #{record.programId,jdbcType=VARCHAR},
+      info_review_state = #{record.infoReviewState,jdbcType=TINYINT},
+      performance_review_state = #{record.performanceReviewState,jdbcType=TINYINT},
+      function_review_state = #{record.functionReviewState,jdbcType=TINYINT},
+      off_review_state = #{record.offReviewState,jdbcType=TINYINT},
+      program_version = #{record.programVersion,jdbcType=VARCHAR},
+      program_version_id = #{record.programVersionId,jdbcType=VARCHAR},
+      review_time = #{record.reviewTime,jdbcType=VARCHAR},
+      is_delete = #{record.isDelete,jdbcType=TINYINT},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.study.mybatis.pojo.TcReviewInfoWithBLOBs">
+    update tc_review_info
+    <set>
+      <if test="reviewStatus != null">
+        review_status = #{reviewStatus,jdbcType=TINYINT},
+      </if>
+      <if test="reviewType != null">
+        review_type = #{reviewType,jdbcType=TINYINT},
+      </if>
+      <if test="programName != null">
+        program_name = #{programName,jdbcType=VARCHAR},
+      </if>
+      <if test="programId != null">
+        program_id = #{programId,jdbcType=VARCHAR},
+      </if>
+      <if test="infoReviewState != null">
+        info_review_state = #{infoReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="performanceReviewState != null">
+        performance_review_state = #{performanceReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="functionReviewState != null">
+        function_review_state = #{functionReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="offReviewState != null">
+        off_review_state = #{offReviewState,jdbcType=TINYINT},
+      </if>
+      <if test="programVersion != null">
+        program_version = #{programVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="programVersionId != null">
+        program_version_id = #{programVersionId,jdbcType=VARCHAR},
+      </if>
+      <if test="reviewTime != null">
+        review_time = #{reviewTime,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="infoReviewDesc != null">
+        info_review_desc = #{infoReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="performanceReviewDesc != null">
+        performance_review_desc = #{performanceReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="functionReviewDesc != null">
+        function_review_desc = #{functionReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="offReviewDesc != null">
+        off_review_desc = #{offReviewDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where review_id = #{reviewId,jdbcType=VARCHAR}
+      and program_app_id = #{programAppId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.study.mybatis.pojo.TcReviewInfoWithBLOBs">
+    update tc_review_info
+    set review_status = #{reviewStatus,jdbcType=TINYINT},
+      review_type = #{reviewType,jdbcType=TINYINT},
+      program_name = #{programName,jdbcType=VARCHAR},
+      program_id = #{programId,jdbcType=VARCHAR},
+      info_review_state = #{infoReviewState,jdbcType=TINYINT},
+      performance_review_state = #{performanceReviewState,jdbcType=TINYINT},
+      function_review_state = #{functionReviewState,jdbcType=TINYINT},
+      off_review_state = #{offReviewState,jdbcType=TINYINT},
+      program_version = #{programVersion,jdbcType=VARCHAR},
+      program_version_id = #{programVersionId,jdbcType=VARCHAR},
+      review_time = #{reviewTime,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      info_review_desc = #{infoReviewDesc,jdbcType=LONGVARCHAR},
+      performance_review_desc = #{performanceReviewDesc,jdbcType=LONGVARCHAR},
+      function_review_desc = #{functionReviewDesc,jdbcType=LONGVARCHAR},
+      off_review_desc = #{offReviewDesc,jdbcType=LONGVARCHAR}
+    where review_id = #{reviewId,jdbcType=VARCHAR}
+      and program_app_id = #{programAppId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.study.mybatis.pojo.TcReviewInfo">
+    update tc_review_info
+    set review_status = #{reviewStatus,jdbcType=TINYINT},
+      review_type = #{reviewType,jdbcType=TINYINT},
+      program_name = #{programName,jdbcType=VARCHAR},
+      program_id = #{programId,jdbcType=VARCHAR},
+      info_review_state = #{infoReviewState,jdbcType=TINYINT},
+      performance_review_state = #{performanceReviewState,jdbcType=TINYINT},
+      function_review_state = #{functionReviewState,jdbcType=TINYINT},
+      off_review_state = #{offReviewState,jdbcType=TINYINT},
+      program_version = #{programVersion,jdbcType=VARCHAR},
+      program_version_id = #{programVersionId,jdbcType=VARCHAR},
+      review_time = #{reviewTime,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where review_id = #{reviewId,jdbcType=VARCHAR}
+      and program_app_id = #{programAppId,jdbcType=VARCHAR}
+  </update>
+</mapper>
