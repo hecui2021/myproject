@@ -11,8 +11,8 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.util.DigestUtils;
-import org.springframework.util.StringUtils;
 
 @Slf4j
 public class CipherUtil {

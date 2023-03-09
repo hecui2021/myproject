@@ -1,7 +1,6 @@
 package com.study.controller;
 
 import com.study.kafka.KafkaProducer;
-import com.study.pojo.TcProject;
 import com.study.service.TestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,6 @@ public class TestController {
     private TestService testService;
 
     @Autowired
-    private TcProject tcProject;
-
-    @Autowired
     private KafkaProducer producer;
 
     @GetMapping("/sendMsg")
@@ -34,15 +30,7 @@ public class TestController {
 
     @RequestMapping("/mvData")
     public String mvData(){
-//        String result = testService.mvData();
-
-        log.info("tcProject:{}",tcProject);
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        log.info("tcProject2:{}",tcProject);
+        testService.mvData();
 
         return "success";
     }

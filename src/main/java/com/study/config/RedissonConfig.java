@@ -1,5 +1,6 @@
 package com.study.config;
 
+import org.apache.commons.lang.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -18,7 +19,10 @@ public class RedissonConfig {
     @Bean
     public RedissonClient redissonClient() {
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://" + redissonHost + ":6379").setPassword(redissonPassword);
+        config.useSingleServer().setAddress("redis://" + redissonHost + ":6379");
+        if (StringUtils.isNotEmpty(redissonPassword)) {
+            config.useSingleServer().setPassword(redissonPassword);
+        }
         RedissonClient client = Redisson.create(config);
         return client;
     }
