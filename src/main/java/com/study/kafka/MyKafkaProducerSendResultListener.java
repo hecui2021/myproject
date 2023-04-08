@@ -16,8 +16,8 @@ public class MyKafkaProducerSendResultListener implements ProducerListener {
     }
 
     @Override
-    public void onError(ProducerRecord producerRecord, RecordMetadata recordMetadata,
-        Exception exception) {
+    public void onError(ProducerRecord producerRecord, Exception exception) {
         log.error("send msg error:{}",exception.getMessage());
     }
+
 }
