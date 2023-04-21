@@ -12,7 +12,7 @@
         <!-- 数据库连接配置 -->
         <!-- 注意xml中不支持&，用&amp;代替 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-            connectionURL="jdbc:mysql://localhost:3306/mybatis?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
+            connectionURL="jdbc:mysql://localhost:3306/saaspf?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
             userId="root" password="123456"></jdbcConnection>
 
         <!-- 处理NUMERIC和DECIMAL类型的策略 -->
@@ -21,29 +21,25 @@
         </javaTypeResolver>
 
         <!-- 配置pojo生成的位置 -->
-        <javaModelGenerator targetPackage="com.study.mybatis.pojo"  targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.lix7.bossserver.pojo"  targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
         <!-- 配置sql映射文件的生成位置 -->
-        <sqlMapGenerator targetPackage="com.study.mybatis.mapper" targetProject="src/main/resources/mapper">
+        <sqlMapGenerator targetPackage="com.lix7.bossserver.mapper" targetProject="src/main/resources/mapper">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </sqlMapGenerator>
 
         <!-- 配置dao接口的生成位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.study.mybatis.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.lix7.bossserver.mapper"
             targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaClientGenerator>
 
         <!-- 指定逆向依据的数据表 -->
-        <table tableName="tc_cppoi_apply_record" domainObjectName="TcCppoiApplyRecord"></table>
-        <table tableName="tc_cppoi_category_info" domainObjectName="TcCppoiCategoryInfo"></table>
-        <table tableName="tc_cppoi_info" domainObjectName="TcCppoiInfo"></table>
-        <table tableName="tc_program_basic_info" domainObjectName="TcProgramBasicInfo"></table>
-        <table tableName="tc_review_info" domainObjectName="TcReviewInfo"></table>
+        <table tableName="tc_integrator" domainObjectName="TcIntegrator"></table>
     </context>
 </generatorConfiguration>
