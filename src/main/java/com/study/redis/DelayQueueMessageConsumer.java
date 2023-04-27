@@ -27,7 +27,7 @@ public class DelayQueueMessageConsumer {
     /**
      * redisson延迟队列消费端
      */
-    @PostConstruct
+//    @PostConstruct
     public void consumerAndSendKafka() {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
