@@ -1,7 +1,5 @@
 package com.study.config;
 
-import com.study.pojo.Config;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -12,9 +10,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BeanConfig {
 
-    @Bean
-    public Config config2(){
-        return new Config();
-    }
 
 }
