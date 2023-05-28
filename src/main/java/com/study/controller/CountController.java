@@ -1,5 +1,6 @@
 package com.study.controller;
 
+import com.study.annotation.Idempoent;
 import com.study.service.CountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ public class CountController {
     private CountService countService;
 
     @GetMapping("/hello")
+    @Idempoent
     public String count() {
         return countService.count();
     }
