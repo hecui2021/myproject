@@ -1,6 +1,6 @@
 package com.study.es.service;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 public class EsService {
     @Autowired
     private RestHighLevelClient client;
+
     /**
      * 判断索引是否存在
      *
@@ -89,7 +90,7 @@ public class EsService {
      */
     public boolean docExists(String index, String id) throws IOException {
         GetRequest getRequest = new GetRequest(index, id);
-//只判断索引是否存在不需要获取_source
+        //只判断索引是否存在不需要获取_source
         getRequest.fetchSourceContext(new FetchSourceContext(false));
         getRequest.storedFields("_none_");
         boolean exists = client.exists(getRequest, RequestOptions.DEFAULT);
@@ -106,11 +107,11 @@ public class EsService {
      */
     public boolean addDoc(String index, String id, Object obj) throws IOException {
         IndexRequest request = new IndexRequest(index);
-        request.id(id);
-        //timeout
-        request.timeout(TimeValue.timeValueSeconds(1));
-        request.timeout("1s");
-        request.source(JSON.toJSONString(obj), XContentType.JSON);
+//        request.id(id);
+//        //timeout
+//        request.timeout(TimeValue.timeValueSeconds(1));
+//        request.timeout("1s");
+        request.source(JSONObject.toJSONString(obj), XContentType.JSON);
         IndexResponse indexResponse = client.index(request, RequestOptions.DEFAULT);
         RestStatus Status = indexResponse.status();
         return Status == RestStatus.OK || Status == RestStatus.CREATED;
@@ -139,11 +140,11 @@ public class EsService {
      */
     public boolean bulkAdd(String index, List<Object> list) throws IOException {
         BulkRequest bulkRequest = new BulkRequest();
-//timeout
+        //timeout
         bulkRequest.timeout(TimeValue.timeValueMinutes(2));
         bulkRequest.timeout("2m");
         for (int i = 0; i < list.size(); i++) {
-            bulkRequest.add(new IndexRequest(index).source(JSON.toJSONString(list.get(i))));
+            bulkRequest.add(new IndexRequest(index).source(JSONObject.toJSONString(list.get(i))));
         }
         BulkResponse bulkResponse = client.bulk(bulkRequest,RequestOptions.DEFAULT);
         return !bulkResponse.hasFailures();
@@ -158,7 +159,7 @@ public class EsService {
      */
     public boolean updateDoc(String index, String id, Object obj) throws IOException {
         UpdateRequest request = new UpdateRequest(index, id);
-        request.doc(JSON.toJSONString(obj));
+        request.doc(JSONObject.toJSONString(obj));
         request.timeout(TimeValue.timeValueSeconds(1));
         request.timeout("1s");
         UpdateResponse updateResponse = client.update(request, RequestOptions.DEFAULT);
@@ -174,7 +175,7 @@ public class EsService {
      */
     public boolean deleteDoc(String index, String id) throws IOException {
         DeleteRequest request = new DeleteRequest(index, id);
-//timeout
+        //timeout
         request.timeout(TimeValue.timeValueSeconds(1));
         request.timeout("1s");
         DeleteResponse deleteResponse = client.delete(request, RequestOptions.DEFAULT);
@@ -193,14 +194,14 @@ public class EsService {
         SearchRequest searchRequest = new SearchRequest(index);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.query(QueryBuilders.termQuery(field, key));
-//控制搜素
+        //控制搜素
         sourceBuilder.from(from);
         sourceBuilder.size(size);
-//最大搜索时间。
+        //最大搜索时间。
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
         searchRequest.source(sourceBuilder);
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-        System.out.println(JSON.toJSONString(searchResponse.getHits()));
+        System.out.println(JSONObject.toJSONString(searchResponse.getHits()));
     }
 
 }
