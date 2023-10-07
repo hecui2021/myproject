@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface AccountBasicinfoService {
 
+    void addData(String channelId,int num);
+
     List<AccountBasicinfo> selectList(BasicInfoDto dto);
 
 }

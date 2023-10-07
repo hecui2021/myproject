@@ -1,5 +1,7 @@
 package com.study.dto;
 
+import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 /**
@@ -9,5 +11,12 @@ import lombok.Data;
  **/
 @Data
 public class BasicInfoDto {
+
+    private List<String> channelIdList;
+
+    private Date startDate;
+    private Date endDate;
+
+    private int num;
 
 }

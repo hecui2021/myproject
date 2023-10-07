@@ -1,6 +1,8 @@
 package com.study.es.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.study.es.model.AccountBasicinfo;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -39,6 +41,7 @@ import java.util.concurrent.TimeUnit;
  * @Date: 2023/9/24 14:08
  */
 @Service
+@Slf4j
 public class EsService {
     @Autowired
     private RestHighLevelClient client;
@@ -138,22 +141,25 @@ public class EsService {
      * @return
      * @throws IOException
      */
-    public boolean bulkAdd(String index, List<Object> list) throws IOException {
+    public boolean bulkAdd(String index, List<AccountBasicinfo> list) throws IOException {
         BulkRequest bulkRequest = new BulkRequest();
         //timeout
         bulkRequest.timeout(TimeValue.timeValueMinutes(2));
         bulkRequest.timeout("2m");
         for (int i = 0; i < list.size(); i++) {
-            bulkRequest.add(new IndexRequest(index).source(JSONObject.toJSONString(list.get(i))));
+            bulkRequest.add(new IndexRequest(index).source(list.get(i),XContentType.JSON));
         }
         BulkResponse bulkResponse = client.bulk(bulkRequest,RequestOptions.DEFAULT);
+        log.info("rsp:{}",JSONObject.toJSONString(bulkResponse));
+        log.info("hasFailures:{}",JSONObject.toJSONString(bulkResponse.hasFailures()));
+        log.info("buildFailureMessage:{}",JSONObject.toJSONString(bulkResponse.buildFailureMessage()));
         return !bulkResponse.hasFailures();
     }
     /**
      * 更新文档记录
      * @param index
      * @param id
-     * @param t
+     * @param obj
      * @return
      * @throws IOException
      */
@@ -189,7 +195,7 @@ public class EsService {
      * @param key 要收搜的关键字
      * @throws IOException
      */
-    public void search(String index, String field, String key, Integer
+    public SearchResponse search(String index, String field, String key, Integer
             from, Integer size) throws IOException {
         SearchRequest searchRequest = new SearchRequest(index);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
@@ -201,7 +207,7 @@ public class EsService {
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
         searchRequest.source(sourceBuilder);
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-        System.out.println(JSONObject.toJSONString(searchResponse.getHits()));
+        return searchResponse;
     }
 
 }

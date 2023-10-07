@@ -1,6 +1,9 @@
 package com.study.es.model;
 
+import java.util.Date;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author peterche
@@ -8,23 +11,32 @@ import lombok.Data;
  * @Date 2023/8/30 11:38
  **/
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccountBasicinfo {
 
-    private String id;
+    private String _id;
 
-    private String wecarid;
+    private String auto_updatetime;
 
-    private String channel;
+    private String car_token;
+
+    private int device_auth_state;
+
+    private int device_type;
+
+    private String device_type_name;
 
     private String deviceid;
 
-    private String deviceType;
+    private String f_channel;
 
-    private String deviceTypeName;
+    private int isvalid;
 
-    private String registTime;
+    private String mk_wecarid;
 
+    private String regist_time;
 
-
+    private int sDCacheExpireTime;
 
 }
