@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,21 +30,48 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
     @Autowired
     private EsService esService;
 
+    @Qualifier("es-thread")
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
     @Override
-    public void addData(String channelId, int num) {
-        List<AccountBasicinfo> basicinfoList = new ArrayList<>();
-        for (int i = 0;i<num;i++) {
-            AccountBasicinfo basicinfo = new AccountBasicinfo();
-            basicinfo.setDeviceid(UUID.randomUUID().toString().replace("-",""));
-            basicinfo.setF_channel(channelId);
-            basicinfo.setRegist_time(DateUtil.getCurrentTime());
-            basicinfoList.add(basicinfo);
+    public void batchAddData(String channelId, int sum) {
+
+
+        int num = 500;
+
+        int count = sum / num;
+        for (int i = 0;i<count;i++) {
+            threadPoolTaskExecutor.execute(() -> {
+                List<AccountBasicinfo> basicinfoList = new ArrayList<>();
+                for (int j = 0;j<num;j++) {
+                    AccountBasicinfo basicinfo = new AccountBasicinfo();
+                    basicinfo.setDeviceid(UUID.randomUUID().toString().replace("-",""));
+                    basicinfo.setF_channel(channelId);
+                    basicinfo.setRegist_time(DateUtil.getCurrentTime());
+                    basicinfo.setDevice_auth_state(j);
+                    basicinfoList.add(basicinfo);
+                }
+                try {
+                    boolean wecarCarAcct = esService.bulkAdd("wecar_car_acct", basicinfoList);
+                    log.info("batchAddData wecarCarAcct:{},threadId:{}",wecarCarAcct,Thread.currentThread().getId());
+
+//                    Thread.sleep(500);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
+    }
+
+    @Override
+    public boolean addData(AccountBasicinfo basicinfo) {
         try {
-            esService.bulkAdd("wecar_car_acct",basicinfoList);
+            return esService.addDoc("wecar_car_acct", null, basicinfo);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("addData error",e);
         }
+        return false;
     }
 
     @Override
@@ -50,7 +79,7 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
         List<AccountBasicinfo> basicinfoList = new ArrayList<>();
         try {
             SearchResponse searchResponse = esService.search("wecar_car_acct", "f_channel",
-                dto.getChannelIdList().get(0), 0, 10000);
+                dto.getChannelIdList().get(0), 0, 100000000);
             SearchHit[] hits = searchResponse.getHits().getHits();
             for(SearchHit hit : hits){
                 AccountBasicinfo basicinfo = new AccountBasicinfo();
@@ -65,6 +94,7 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        log.info("basicinfoList:{}",basicinfoList.size());
         return basicinfoList;
     }
 }

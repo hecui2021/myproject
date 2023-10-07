@@ -116,6 +116,7 @@ public class EsService {
 //        request.timeout("1s");
         request.source(JSONObject.toJSONString(obj), XContentType.JSON);
         IndexResponse indexResponse = client.index(request, RequestOptions.DEFAULT);
+        log.info("rsp:{}",JSONObject.toJSONString(indexResponse));
         RestStatus Status = indexResponse.status();
         return Status == RestStatus.OK || Status == RestStatus.CREATED;
     }
@@ -147,12 +148,10 @@ public class EsService {
         bulkRequest.timeout(TimeValue.timeValueMinutes(2));
         bulkRequest.timeout("2m");
         for (int i = 0; i < list.size(); i++) {
-            bulkRequest.add(new IndexRequest(index).source(list.get(i),XContentType.JSON));
+            bulkRequest.add(new IndexRequest(index).source(JSONObject.toJSONString(list.get(i)),XContentType.JSON));
         }
         BulkResponse bulkResponse = client.bulk(bulkRequest,RequestOptions.DEFAULT);
-        log.info("rsp:{}",JSONObject.toJSONString(bulkResponse));
-        log.info("hasFailures:{}",JSONObject.toJSONString(bulkResponse.hasFailures()));
-        log.info("buildFailureMessage:{}",JSONObject.toJSONString(bulkResponse.buildFailureMessage()));
+//        log.info("hasFailures:{}",JSONObject.toJSONString(bulkResponse.hasFailures()));
         return !bulkResponse.hasFailures();
     }
     /**

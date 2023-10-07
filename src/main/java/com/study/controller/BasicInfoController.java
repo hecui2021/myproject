@@ -22,9 +22,14 @@ public class BasicInfoController {
     @Autowired
     private AccountBasicinfoService accountBasicinfoService;
 
+    @PostMapping("/batchAddData")
+    public void batchAddData(@RequestBody BasicInfoDto dto) {
+        accountBasicinfoService.batchAddData(dto.getChannelIdList().get(0),dto.getNum());
+    }
+
     @PostMapping("/addData")
-    public void addData(@RequestBody BasicInfoDto dto) {
-        accountBasicinfoService.addData(dto.getChannelIdList().get(0),dto.getNum());
+    public boolean addData(@RequestBody AccountBasicinfo basicinfo) {
+        return accountBasicinfoService.addData(basicinfo);
     }
 
     @PostMapping("/selectList")
