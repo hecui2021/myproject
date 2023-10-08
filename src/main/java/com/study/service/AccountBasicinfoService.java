@@ -7,6 +7,7 @@ import java.util.List;
 public interface AccountBasicinfoService {
 
     void batchAddData(String channelId,int sum);
+
     boolean addData(AccountBasicinfo basicinfo);
 
     List<AccountBasicinfo> selectList(BasicInfoDto dto);

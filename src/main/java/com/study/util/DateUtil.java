@@ -469,7 +469,7 @@ public class DateUtil {
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
-        return new SimpleDateFormat("yy.MM.dd").format(cal.getTime());
+        return new SimpleDateFormat(FULL_TIME_SPLIT_PATTERN).format(cal.getTime());
     }
 
     /**

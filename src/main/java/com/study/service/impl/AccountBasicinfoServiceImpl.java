@@ -48,7 +48,7 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
                     AccountBasicinfo basicinfo = new AccountBasicinfo();
                     basicinfo.setDeviceid(UUID.randomUUID().toString().replace("-",""));
                     basicinfo.setF_channel(channelId);
-                    basicinfo.setRegist_time(DateUtil.getCurrentTime());
+                    basicinfo.setRegist_time(DateUtil.getLastOfMonth(2022,5));
                     basicinfo.setDevice_auth_state(j);
                     basicinfoList.add(basicinfo);
                 }
@@ -67,6 +67,7 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
     @Override
     public boolean addData(AccountBasicinfo basicinfo) {
         try {
+            basicinfo.setRegist_time(DateUtil.getLastOfMonth(2022,9));
             return esService.addDoc("wecar_car_acct", null, basicinfo);
         } catch (IOException e) {
             log.error("addData error",e);
@@ -79,7 +80,7 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
         List<AccountBasicinfo> basicinfoList = new ArrayList<>();
         try {
             SearchResponse searchResponse = esService.search("wecar_car_acct", "f_channel",
-                dto.getChannelIdList().get(0), 0, 100000000);
+                dto.getChannelIdList().get(0), 0, dto.getNum());
             SearchHit[] hits = searchResponse.getHits().getHits();
             for(SearchHit hit : hits){
                 AccountBasicinfo basicinfo = new AccountBasicinfo();

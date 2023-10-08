@@ -145,8 +145,8 @@ public class EsService {
     public boolean bulkAdd(String index, List<AccountBasicinfo> list) throws IOException {
         BulkRequest bulkRequest = new BulkRequest();
         //timeout
-        bulkRequest.timeout(TimeValue.timeValueMinutes(2));
-        bulkRequest.timeout("2m");
+//        bulkRequest.timeout(TimeValue.timeValueMinutes(2));
+//        bulkRequest.timeout("2m");
         for (int i = 0; i < list.size(); i++) {
             bulkRequest.add(new IndexRequest(index).source(JSONObject.toJSONString(list.get(i)),XContentType.JSON));
         }
