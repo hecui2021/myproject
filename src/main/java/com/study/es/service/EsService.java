@@ -2,6 +2,9 @@ package com.study.es.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.study.es.model.AccountBasicinfo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -12,8 +15,11 @@ import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.ClearScrollRequest;
+import org.elasticsearch.action.search.ClearScrollResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchScrollRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
@@ -26,14 +32,18 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.search.Scroll;
+import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @Author: peterche
@@ -104,7 +114,7 @@ public class EsService {
      *
      * @param index
      * @param id
-     * @param t 要添加的数据实体类
+     * @param obj 要添加的数据实体类
      * @return
      * @throws IOException
      */
@@ -195,9 +205,11 @@ public class EsService {
      * @throws IOException
      */
     public SearchResponse search(String index, String field, String key, Integer
-            from, Integer size) throws IOException {
+            from, Integer size) {
         SearchRequest searchRequest = new SearchRequest(index);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        // 设置精确返回总数量
+        sourceBuilder.trackTotalHits(true);
         sourceBuilder.query(QueryBuilders.termQuery(field, key));
         //控制搜素
         sourceBuilder.from(from);
@@ -205,8 +217,145 @@ public class EsService {
         //最大搜索时间。
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
         searchRequest.source(sourceBuilder);
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = null;
+        try {
+            searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            log.error("search error",e);
+        }
         return searchResponse;
     }
+
+    public SearchResponse searchAfter(String indexName,String field, String key,Integer size,Object[] values){
+        //查询源构建器
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.size(size);
+        searchSourceBuilder.from(0); //searchAfter需要将from设置为0或-1，当然也可以不写
+        // 设置精确返回总数量
+        searchSourceBuilder.trackTotalHits(true);
+        //查询条件
+        searchSourceBuilder.query(QueryBuilders.termQuery(field, key));
+        //筛选字段，第一个参数为需要的字段，第二个参数为不需要的字段
+        searchSourceBuilder.fetchSource(new String[] {"deviceid", "regist_time", "device_auth_state*"}, new String[] {});
+        //以时间戳排序
+        searchSourceBuilder.sort("regist_time", SortOrder.ASC);
+
+        if (values != null)
+            searchSourceBuilder.searchAfter(values);
+
+        SearchRequest request = new SearchRequest(indexName);
+        request.source(searchSourceBuilder);
+        SearchResponse response = null;
+        try {
+            response = client.search(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        if (RestStatus.OK.equals(response.status())) {
+//            //设置查询总量
+//            SearchHit[] hits = response.getHits().getHits();
+//            for(int i = 0; i < hits.length; i++) {
+//                String index = hits[i].getIndex();
+//                String id = hits[i].getId();
+//                JSONObject jsonObject = JSONObject.parseObject(hits[i].getSourceAsString(), JSONObject.class);
+//                System.out.println(jsonObject);
+//                if (i == hits.length-1) {
+//                    //最后一条数据的sortValue作为下一次查询的游标值
+//                    values = hits[i].getSortValues();
+//                    System.out.println(Arrays.toString(values));
+//                }
+//            }
+//        }
+        return response;
+    }
+
+    public List<AccountBasicinfo> redoAccountTypeByScroll(String indexName,String field, String key) {
+        List<AccountBasicinfo> basicinfoList = new ArrayList<>();
+
+        //构造es查询条件。
+        SearchRequest searchRequest = new SearchRequest(indexName);
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+
+        sourceBuilder.query(QueryBuilders.termsQuery(field, key))
+            //设置最多一次能够取出10000条数据，从第10001条数据开始，将开启滚动查询。
+            .size(10000)
+            .fetchSource(new String[]{"f_channel","deviceid", "regist_time", "device_auth_state*"},null);
+        searchRequest.source(sourceBuilder);
+        //设置scroll超时时间(10min)。
+        Scroll scroll=new Scroll(TimeValue.timeValueMinutes(10L));
+        //放入滚动查询对象。
+        searchRequest.scroll(scroll);
+        SearchResponse response = null;
+        try {
+            response = client.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //TODO：这里可以解析response对象，获取前10000条数据，封装实体类对象（属性为uid和type），并构成集合accountTypeVOList。我这里假设已经解析response对象完成，得到了accountTypeVOList集合。
+        SearchHit[] hits = response.getHits().getHits();
+        for(SearchHit hit : hits){
+            AccountBasicinfo basicinfo = new AccountBasicinfo();
+            basicinfo.set_id(hit.getId());
+            // 源文档内容
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
+            basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
+            basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+            basicinfoList.add(basicinfo);
+        }
+        log.info("first select end");
+
+        //记录滚动id。
+        String scrollId=response.getScrollId();
+        //滚动查询部分，将从第10001条数据开始取。
+        SearchHit[] scrollHits = response.getHits().getHits();
+        int i = 0;
+        while (scrollHits != null && scrollHits.length > 0 ) {
+            //构造滚动查询条件
+            SearchScrollRequest searchScrollRequest = new SearchScrollRequest(scrollId);
+            searchScrollRequest.scroll(scroll);
+            //响应必须是上面的响应对象，需要对上一层进行覆盖。
+            try {
+                response = client.scroll(searchScrollRequest, RequestOptions.DEFAULT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            scrollId = response.getScrollId();
+            scrollHits=response.getHits().getHits();
+
+            //TODO：同上面一样，在这个位置可以对滚动查询到的从10001条数据开始的数据进行处理(封装实体类)，构成集合accountTypeVOList（假设我已经构成了集合）。
+            for(SearchHit hit : scrollHits){
+                AccountBasicinfo basicinfo = new AccountBasicinfo();
+                basicinfo.set_id(hit.getId());
+                // 源文档内容
+                Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+                basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
+                basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
+                basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+                basicinfoList.add(basicinfo);
+            }
+            log.info("i:{} select end",i++);
+//            resultList.add(accountTypeVOList);
+        }
+
+        //TODO：在循环结束后可以遍历resultList这个大集合，来实现我们自己的需求，我这里是获取账号分类（由于我这里需要调用其它项目完成账号分类的获取，代码就不再贴了，感觉冗余。读者需要明白这里是实现自己的业务需求）。
+
+
+        //数据获取完毕后需要清楚滚动，否则影响下次查询。
+        ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+        clearScrollRequest.addScrollId(scrollId);
+        ClearScrollResponse clearScrollResponse = null;
+        try {
+            clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //清除滚动是否成功
+        boolean isSuccess = clearScrollResponse.isSucceeded();
+        log.info("=====================>清楚滚动scroll是否成功：{}",isSuccess);
+        return basicinfoList;
+    }
+
 
 }

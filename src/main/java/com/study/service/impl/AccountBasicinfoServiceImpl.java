@@ -48,7 +48,7 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
                     AccountBasicinfo basicinfo = new AccountBasicinfo();
                     basicinfo.setDeviceid(UUID.randomUUID().toString().replace("-",""));
                     basicinfo.setF_channel(channelId);
-                    basicinfo.setRegist_time(DateUtil.getLastOfMonth(2022,5));
+                    basicinfo.setRegist_time(DateUtil.getLastOfMonth(2023,5));
                     basicinfo.setDevice_auth_state(j);
                     basicinfoList.add(basicinfo);
                 }
@@ -78,23 +78,21 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
     @Override
     public List<AccountBasicinfo> selectList(BasicInfoDto dto) {
         List<AccountBasicinfo> basicinfoList = new ArrayList<>();
-        try {
-            SearchResponse searchResponse = esService.search("wecar_car_acct", "f_channel",
-                dto.getChannelIdList().get(0), 0, dto.getNum());
-            SearchHit[] hits = searchResponse.getHits().getHits();
-            for(SearchHit hit : hits){
-                AccountBasicinfo basicinfo = new AccountBasicinfo();
-                basicinfo.set_id(hit.getId());
-                // 源文档内容
-                Map<String, Object> sourceAsMap = hit.getSourceAsMap();
-                basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
-                basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
-                basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
-                basicinfoList.add(basicinfo);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        SearchResponse searchResponse = esService.search("wecar_car_acct", "f_channel",
+            dto.getChannelIdList().get(0), 0, dto.getNum());
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        for(SearchHit hit : hits){
+            AccountBasicinfo basicinfo = new AccountBasicinfo();
+            basicinfo.set_id(hit.getId());
+            // 源文档内容
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
+            basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
+            basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+            basicinfoList.add(basicinfo);
         }
+
         log.info("basicinfoList:{}",basicinfoList.size());
         return basicinfoList;
     }
