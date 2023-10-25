@@ -20,7 +20,7 @@ public class DataController {
      * @param response
      */
     @GetMapping("/exportFile")
-    public void exportFile(@RequestParam("channelId") String channelId,HttpServletResponse response) {
+    public void exportFile(@RequestParam("channelId") String channelId,HttpServletResponse response) throws Exception{
         dataService.exportFile(channelId,response);
     }
 

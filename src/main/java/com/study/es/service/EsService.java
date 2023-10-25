@@ -357,5 +357,153 @@ public class EsService {
         return basicinfoList;
     }
 
+    public SearchResponse getScrollt1(String field, String key) {
+        final long startTime = System.currentTimeMillis();
+        //构造es查询条件。
+        SearchRequest searchRequest = new SearchRequest("wecar_car_acct");
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        // 设置精确返回总数量
+        sourceBuilder.trackTotalHits(true);
+
+        sourceBuilder.query(QueryBuilders.termQuery(field, key))
+            //设置最多一次能够取出10000条数据，从第10001条数据开始，将开启滚动查询。
+            .size(10000)
+            .fetchSource(new String[]{"f_channel","deviceid", "regist_time", "device_auth_state*"},null);
+        searchRequest.source(sourceBuilder);
+        //设置scroll超时时间(10min)。
+        Scroll scroll=new Scroll(TimeValue.timeValueMinutes(10L));
+        //放入滚动查询对象。
+        searchRequest.scroll(scroll);
+        SearchResponse response = null;
+        try {
+            response = client.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        log.info("getScrollt1 key:{} cost:{}  response:{}"
+            ,key,(System.currentTimeMillis() - startTime),response.status());
+        return response;
+    }
+
+    public SearchResponse getScrollt2(SearchResponse response) {
+        final long startTime = System.currentTimeMillis();
+        Scroll scroll=new Scroll(TimeValue.timeValueMinutes(10L));
+        //构造滚动查询条件
+        SearchScrollRequest searchScrollRequest = new SearchScrollRequest(response.getScrollId());
+        searchScrollRequest.scroll(scroll);
+        //响应必须是上面的响应对象，需要对上一层进行覆盖。
+        try {
+            response = client.scroll(searchScrollRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        log.info("getScrollt2 cost:{} response:{}",(System.currentTimeMillis() - startTime),response.status());
+        return response;
+    }
+
+    public ClearScrollResponse getScrollt3(SearchResponse response) {
+        final long startTime = System.currentTimeMillis();
+        //数据获取完毕后需要清楚滚动，否则影响下次查询。
+        ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+        clearScrollRequest.addScrollId(response.getScrollId());
+        ClearScrollResponse clearScrollResponse = null;
+        try {
+            clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //清除滚动是否成功
+        boolean isSuccess = clearScrollResponse.isSucceeded();
+        log.info("getScrollt3 cost:{} clearScrollResponse:{}"
+            ,(System.currentTimeMillis() - startTime),clearScrollResponse.status());
+        return clearScrollResponse;
+    }
+
+
+
+    public List<AccountBasicinfo> redoAccountTypeByScrollv2(String field, String key) {
+        List<AccountBasicinfo> basicinfoList = new ArrayList<>();
+
+        //构造es查询条件。
+        SearchRequest searchRequest = new SearchRequest("wecar_car_acct");
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+
+        sourceBuilder.query(QueryBuilders.termsQuery(field, key))
+            //设置最多一次能够取出10000条数据，从第10001条数据开始，将开启滚动查询。
+            .size(10000)
+            .fetchSource(new String[]{"f_channel","deviceid", "regist_time", "device_auth_state*"},null);
+        searchRequest.source(sourceBuilder);
+        //设置scroll超时时间(10min)。
+        Scroll scroll=new Scroll(TimeValue.timeValueMinutes(10L));
+        //放入滚动查询对象。
+        searchRequest.scroll(scroll);
+        SearchResponse response = null;
+        try {
+            response = client.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //TODO：这里可以解析response对象，获取前10000条数据，封装实体类对象（属性为uid和type），并构成集合accountTypeVOList。我这里假设已经解析response对象完成，得到了accountTypeVOList集合。
+        SearchHit[] hits = response.getHits().getHits();
+        for(SearchHit hit : hits){
+            AccountBasicinfo basicinfo = new AccountBasicinfo();
+            basicinfo.set_id(hit.getId());
+            // 源文档内容
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
+            basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
+            basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+            basicinfoList.add(basicinfo);
+        }
+        log.info("first select end");
+
+        //记录滚动id。
+        String scrollId=response.getScrollId();
+        //滚动查询部分，将从第10001条数据开始取。
+        SearchHit[] scrollHits = response.getHits().getHits();
+        int i = 0;
+        while (scrollHits != null && scrollHits.length > 0 ) {
+            //构造滚动查询条件
+            SearchScrollRequest searchScrollRequest = new SearchScrollRequest(scrollId);
+            searchScrollRequest.scroll(scroll);
+            //响应必须是上面的响应对象，需要对上一层进行覆盖。
+            try {
+                response = client.scroll(searchScrollRequest, RequestOptions.DEFAULT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            scrollId = response.getScrollId();
+            scrollHits=response.getHits().getHits();
+
+            //TODO：同上面一样，在这个位置可以对滚动查询到的从10001条数据开始的数据进行处理(封装实体类)，构成集合accountTypeVOList（假设我已经构成了集合）。
+            for(SearchHit hit : scrollHits){
+                AccountBasicinfo basicinfo = new AccountBasicinfo();
+                basicinfo.set_id(hit.getId());
+                // 源文档内容
+                Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+                basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
+                basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
+                basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+                basicinfoList.add(basicinfo);
+            }
+            log.info("i:{} select end",i++);
+        }
+
+        //数据获取完毕后需要清楚滚动，否则影响下次查询。
+        ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+        clearScrollRequest.addScrollId(scrollId);
+        ClearScrollResponse clearScrollResponse = null;
+        try {
+            clearScrollResponse = client.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //清除滚动是否成功
+        boolean isSuccess = clearScrollResponse.isSucceeded();
+        log.info("=====================>清楚滚动scroll是否成功：{}",isSuccess);
+        return basicinfoList;
+    }
+
 
 }

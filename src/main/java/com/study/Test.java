@@ -1,5 +1,6 @@
 package com.study;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,19 @@ public class Test {
 
         int s = diameterOfBinaryTree(root);
         System.out.println(s);
+    }
+
+    public static void test() {
+        BigInteger sum = new BigInteger("1");
+        for (int i = 1;i<=1024;i++) {
+            sum = sum.multiply(new BigInteger(i+""));
+        }
+        int count = 0;
+        while (sum.mod(new BigInteger(10+"")).intValue() == 0) {
+            count++;
+            sum = sum.divide(new BigInteger(10+""));
+        }
+        System.out.println(count);
     }
 
 
