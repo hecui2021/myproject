@@ -12,8 +12,8 @@
         <!-- 数据库连接配置 -->
         <!-- 注意xml中不支持&，用&amp;代替 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-            connectionURL="jdbc:mysql://localhost:3306/saaspf?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT%2B8"
-            userId="root" password="123456"></jdbcConnection>
+            connectionURL="jdbc:mysql://localhost:3306/saaspf?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT%2B8&amp;allowPublicKeyRetrieval=true"
+            userId="root" password="root"></jdbcConnection>
 
         <!-- 处理NUMERIC和DECIMAL类型的策略 -->
         <javaTypeResolver>
@@ -40,6 +40,6 @@
         </javaClientGenerator>
 
         <!-- 指定逆向依据的数据表 -->
-        <table tableName="tc_project_static" domainObjectName="TcProjectStatic"></table>
+        <table tableName="tc_channel_browser_config" domainObjectName="TcChannelBrowserConfig"></table>
     </context>
 </generatorConfiguration>

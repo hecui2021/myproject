@@ -300,8 +300,8 @@ public class EsService {
             // 源文档内容
             Map<String, Object> sourceAsMap = hit.getSourceAsMap();
             basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
-            basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
-            basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+            basicinfo.setChannel((String) sourceAsMap.get("channel"));
+            basicinfo.setRegist_time((Long) sourceAsMap.get("regist_time"));
             basicinfoList.add(basicinfo);
         }
         log.info("first select end");
@@ -331,8 +331,8 @@ public class EsService {
                 // 源文档内容
                 Map<String, Object> sourceAsMap = hit.getSourceAsMap();
                 basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
-                basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
-                basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+                basicinfo.setChannel((String) sourceAsMap.get("f_channel"));
+                basicinfo.setRegist_time((Long) sourceAsMap.get("regist_time"));
                 basicinfoList.add(basicinfo);
             }
             log.info("i:{} select end",i++);
@@ -452,8 +452,8 @@ public class EsService {
             // 源文档内容
             Map<String, Object> sourceAsMap = hit.getSourceAsMap();
             basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
-            basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
-            basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+            basicinfo.setChannel((String) sourceAsMap.get("f_channel"));
+            basicinfo.setRegist_time((Long) sourceAsMap.get("regist_time"));
             basicinfoList.add(basicinfo);
         }
         log.info("first select end");
@@ -483,8 +483,8 @@ public class EsService {
                 // 源文档内容
                 Map<String, Object> sourceAsMap = hit.getSourceAsMap();
                 basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
-                basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
-                basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+                basicinfo.setChannel((String) sourceAsMap.get("f_channel"));
+                basicinfo.setRegist_time((Long) sourceAsMap.get("regist_time"));
                 basicinfoList.add(basicinfo);
             }
             log.info("i:{} select end",i++);

@@ -46,14 +46,15 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
                 List<AccountBasicinfo> basicinfoList = new ArrayList<>();
                 for (int j = 0;j<num;j++) {
                     AccountBasicinfo basicinfo = new AccountBasicinfo();
-                    basicinfo.setDeviceid(UUID.randomUUID().toString().replace("-",""));
-                    basicinfo.setF_channel(channelId);
-                    basicinfo.setRegist_time(DateUtil.getLastOfMonth(2023,5));
+                    basicinfo.setDeviceid("cccc");
+                    basicinfo.setWecarid(UUID.randomUUID().toString().replace("-",""));
+                    basicinfo.setChannel(channelId);
+                    basicinfo.setRegist_time(System.currentTimeMillis() / 1000);
                     basicinfo.setDevice_auth_state(j);
                     basicinfoList.add(basicinfo);
                 }
                 try {
-                    boolean wecarCarAcct = esService.bulkAdd("wecar_car_acct", basicinfoList);
+                    boolean wecarCarAcct = esService.bulkAdd("wecar_car_account_basicinfo_alias", basicinfoList);
                     log.info("batchAddData wecarCarAcct:{},threadId:{}",wecarCarAcct,Thread.currentThread().getId());
 
 //                    Thread.sleep(500);
@@ -67,7 +68,7 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
     @Override
     public boolean addData(AccountBasicinfo basicinfo) {
         try {
-            basicinfo.setRegist_time(DateUtil.getLastOfMonth(2022,9));
+            basicinfo.setRegist_time(System.currentTimeMillis() / 1000);
             return esService.addDoc("wecar_car_acct", null, basicinfo);
         } catch (IOException e) {
             log.error("addData error",e);
@@ -88,8 +89,8 @@ public class AccountBasicinfoServiceImpl implements AccountBasicinfoService {
             // 源文档内容
             Map<String, Object> sourceAsMap = hit.getSourceAsMap();
             basicinfo.setDeviceid((String) sourceAsMap.get("deviceid"));
-            basicinfo.setF_channel((String) sourceAsMap.get("f_channel"));
-            basicinfo.setRegist_time((String) sourceAsMap.get("regist_time"));
+            basicinfo.setChannel((String) sourceAsMap.get("channel"));
+            basicinfo.setRegist_time((Long) sourceAsMap.get("regist_time"));
             basicinfoList.add(basicinfo);
         }
 

@@ -30,23 +30,23 @@ public class IdempoentAspect {
 
     }
 
-    @Before("pointCut()")
-    public void before(JoinPoint joinPoint) {
-        //拿到当前请求request
-        HttpServletRequest request =
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        String token = request.getHeader("token");
-        if (StringUtils.isEmpty(token)) {
-            throw new RuntimeException("非法参数");
-        }
-        Boolean delete = stringRedisTemplate.delete(token);
-        if (!delete) {
-            // 重复请求
-            throw new RuntimeException("重复请求");
-        }
-
-    }
+//    @Before("pointCut()")
+//    public void before(JoinPoint joinPoint) {
+//        //拿到当前请求request
+//        HttpServletRequest request =
+//                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//
+//        String token = request.getHeader("token");
+//        if (StringUtils.isEmpty(token)) {
+//            throw new RuntimeException("非法参数");
+//        }
+//        Boolean delete = stringRedisTemplate.delete(token);
+//        if (!delete) {
+//            // 重复请求
+//            throw new RuntimeException("重复请求");
+//        }
+//
+//    }
 
 
 }

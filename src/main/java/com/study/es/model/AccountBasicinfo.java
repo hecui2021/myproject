@@ -29,13 +29,13 @@ public class AccountBasicinfo {
 
     private String deviceid;
 
-    private String f_channel;
+    private String channel;
 
     private int isvalid;
 
-    private String mk_wecarid;
+    private String wecarid;
 
-    private String regist_time;
+    private long regist_time;
 
     private int sDCacheExpireTime;
 

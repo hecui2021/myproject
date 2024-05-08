@@ -21,4 +21,11 @@ public class CountController {
     }
 
 
+    @GetMapping("/getRateLimiter")
+    @Idempoent
+    public String getRateLimiter() {
+        return countService.getRateLimiter();
+    }
+
+
 }

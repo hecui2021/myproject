@@ -1,7 +1,11 @@
 package com.study.netty;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.CharsetUtil;
+
 import java.util.concurrent.TimeUnit;
 
 public class DemoSocketClientHandler extends ChannelInboundHandlerAdapter {
@@ -16,7 +20,8 @@ public class DemoSocketClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx)
         throws Exception {
-        ctx.channel().writeAndFlush("from client：begin talking");
+        ByteBuf buf= Unpooled.copiedBuffer("begin talking".getBytes(CharsetUtil.UTF_8));
+        ctx.channel().writeAndFlush(buf);
     }
 
     @Override
